@@ -30,7 +30,7 @@ def getEvents(request):
     return Response(products)
 
 @api_view(['GET'])
-def getEvents(request, pk):
+def getEvent(request, pk):
     product = None
     for i in products:
         if i['_id'] == pk:
