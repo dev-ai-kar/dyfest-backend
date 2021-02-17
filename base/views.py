@@ -5,7 +5,7 @@ from rest_framework.response import Response
 
 from .models import Event
 from .products import products
-from .serializer import EventSerializer
+from .serializer import EventSerializer, UserSerializer, UserSerializerWithToken
 
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
@@ -13,11 +13,14 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 # Create your views here.
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+    # data can be send in the JWT TOKEN ITSELF ref: https://github.com/SimpleJWT/django-rest-framework-simplejwt/blob/a0c75415cdcc39cce19a09c6acec54f298076704/rest_framework_simplejwt/serializers.py#L58
     def validate(self, attrs):
         data = super().validate(attrs)
 
-        data['username'] = self.user.username
-        data['email'] = self.user.email
+        serializer = UserSerializerWithToken(self.user).data
+
+        for k,v in serializer.items():
+            data[k] = v
 
         return data
 
@@ -42,6 +45,13 @@ def getRoutes(request):
       '/api/events/<update>/<id>/',
     ]
     return Response(routes)
+
+
+@api_view(['GET'])
+def getUserProfile(request):
+    user = request.user
+    serializer = UserSerializer(user, many= False)
+    return Response(serializer.data)
 
 @api_view(['GET'])
 def getEvents(request):
