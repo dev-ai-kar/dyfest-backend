@@ -5,9 +5,7 @@ from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 
 from django.contrib.auth.models import User
-from .models import Event
-from .products import products
-from .serializer import EventSerializer, UserSerializer, UserSerializerWithToken
+from base.serializer import EventSerializer, UserSerializer, UserSerializerWithToken
 
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
@@ -63,16 +61,4 @@ def getUserProfile(request):
 def getUsers(request):
     users = User.objects.all()
     serializer = UserSerializer(users, many= True) # many = True # serializing many object or one
-    return Response(serializer.data)
-
-@api_view(['GET'])
-def getEvents(request):
-    events = Event.objects.all()
-    serializer = EventSerializer(events, many= True) # many = True # serializing many object or one
-    return Response(serializer.data)
-
-@api_view(['GET'])
-def getEvent(request, pk):
-    event = Event.objects.get(_id=pk)
-    serializer = EventSerializer(event, many= False) # many = True # serializing many object or one
     return Response(serializer.data)
