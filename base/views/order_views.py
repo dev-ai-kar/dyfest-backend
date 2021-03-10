@@ -11,7 +11,7 @@ from base.serializer import EventSerializer, OrderSerializer
 from rest_framework import status
 
 @api_view(['POST'])
-@permission_classes(['isAuthenticated'])
+@permission_classes([IsAuthenticated])
 def addOrderItems(request):
     user = request.user
     data = request.data
@@ -29,7 +29,7 @@ def addOrderItems(request):
             totalPrice=data['totalPrice']
             )
         # (2) Create ShippingAddress
-        shipping = ShippingAddress.Objects.create(
+        shipping = ShippingAddress.objects.create(
             order = order,
             address = data['shippingAddress']['address'],
             city = data['shippingAddress']['city'],
@@ -51,5 +51,5 @@ def addOrderItems(request):
         # (4)Update stock
         event.countInStock -= item.qty
         event.save()
-    serializer = OrderSerializer(order, many= True)
-    return Response(serializer.data)
+        serializer = OrderSerializer(order, many= False)
+        return Response(serializer.data)
