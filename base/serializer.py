@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
 from rest_framework_simplejwt.tokens import RefreshToken
-from .models import Event
+from .models import Event, Order, OrderItem, ShippingAddress
 
 class UserSerializer(serializers.ModelSerializer):
     name = serializers.SerializerMethodField(read_only=True)
@@ -40,3 +40,39 @@ class EventSerializer(serializers.ModelSerializer):
         # You can enter a list of parameters here if you what to send specific data
         # fields = ["names","description"]
         fields = '__all__' # to return back everything
+
+class ShippingAddressSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ShippingAddress
+        fields = '__all__' 
+
+class OrderItemSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = OrderItem
+        fields = '__all__' 
+
+class OrderSerializer(serializers.ModelSerializer):
+    orders = serializers.SerializerMethodField(read_only=True)
+    shippingAddress = serializers.SerializerMethodField(read_only=True)
+    user = serializers.SerializerMethodField(read_only=True)
+    
+    class Meta:
+        model = Order
+        fields = '__all__' 
+
+    def get_orders(self, obj):
+        items = obj.orderitems_set.all()
+        serializer = OrderItemSerializer(items, many=True)
+        return serializer.data
+
+    def get_shippingAddress(self, obj):
+        try:
+            address = ShippingAddressSerializer(obj.shippingAddress, many=False)
+        except:
+            address = False
+        return address
+
+    def get_user(self, obj):
+        user = obj.user
+        serializer = UserSerializer(user, many=False)
+        return serializer.data
