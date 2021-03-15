@@ -22,3 +22,10 @@ def getEvent(request, pk):
     event = Event.objects.get(_id=pk)
     serializer = EventSerializer(event, many= False) # many = True # serializing many object or one
     return Response(serializer.data)
+
+@api_view(['DELETE'])
+@permission_classes([IsAdminUser])
+def deleteEvent(request, pk):
+    event = Event.objects.get(_id=pk)
+    event.delete()
+    return Response('Event Deleted')
