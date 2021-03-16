@@ -64,3 +64,15 @@ def deleteEvent(request, pk):
     event = Event.objects.get(_id=pk)
     event.delete()
     return Response('Event Deleted')
+
+@api_view(['POST'])
+def uploadImage(request):
+    data = request.data
+
+    event_id = data['event_id']
+    event = Event.objects.get(_id=event_id)
+
+    event.image = request.FILES.get('image')
+    event.save()
+
+    return Response('Image was uploaded')

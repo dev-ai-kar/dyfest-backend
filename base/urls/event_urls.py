@@ -5,6 +5,7 @@ urlpatterns = [
     path('', views.getEvents, name="events"),
 
     path('create/', views.createEvent, name="event-create"),
+    path('upload/', views.uploadImage, name="image-upload"),
     path('<str:pk>/', views.getEvent, name="event"),
 
     path('update/<str:pk>/', views.updateEvent, name="event-update"),
