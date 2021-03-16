@@ -40,13 +40,14 @@ def createEvent(request):
     return Response(serializer.data)
 
 
-@api_view(['GET'])
+@api_view(['PUT'])
 @permission_classes([IsAdminUser])
 def updateEvent(request, pk):
     data = request.data
     event = Event.objects.get(_id = pk)
     event.name = data['name']
     event.brand = data['brand']
+    event.price = data['price']
     event.category = data['category']
     event.countInStock = data['countInStock']
     event.description = data['description']

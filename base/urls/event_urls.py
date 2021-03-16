@@ -7,6 +7,6 @@ urlpatterns = [
     path('create/', views.createEvent, name="event-create"),
     path('<str:pk>/', views.getEvent, name="event"),
 
-    path('update/<str:pk>/', views.deleteEvent, name="event-update"),
+    path('update/<str:pk>/', views.updateEvent, name="event-update"),
     path('delete/<str:pk>/', views.deleteEvent, name="event-delete"),
 ]
